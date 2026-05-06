@@ -21,26 +21,27 @@ services:
       - posengine-network
     restart: unless-stopped
 
-    backend:
-      image: ${BACKEND_IMAGE:-kevinho3324/posengine-backend:1.1.0}
-      container_name: ${BACKEND_CONTAINER_NAME:-posengine-backend}
-      ports:
-        - "3005:3005"
-      environment:
-        DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
-        JWT_SECRET: ${JWT_SECRET}
-        JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-7d}
-        CORS_ORIGIN: ${CORS_ORIGIN}
-        NODE_ENV: ${NODE_ENV:-production}
-        PORT: 3005
-      volumes:
-        - uploads_data:/app/uploads
-      depends_on:
-        postgres:
-          condition: service_healthy
-      networks:
-        - posengine-network
-      restart: unless-stopped
+  backend:
+    image: ${BACKEND_IMAGE:-kevinho3324/posengine-backend:1.1.0}
+    container_name: ${BACKEND_CONTAINER_NAME:-posengine-backend}
+    ports:
+      - "3005:3005"
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-7d}
+      CORS_ORIGIN: ${CORS_ORIGIN}
+      NODE_ENV: ${NODE_ENV:-production}
+      PORT: 3005
+    volumes:
+      - uploads_data:/app/uploads
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - posengine-network
+    restart: unless-stopped
+
   nginx:
     image: ${NGINX_IMAGE:-nginx:alpine}
     container_name: ${NGINX_CONTAINER_NAME:-posengine-nginx}
